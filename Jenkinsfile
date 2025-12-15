@@ -1,0 +1,65 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'jdk-17'
+        maven 'Maven3.9.11'
+    }
+
+    environment {
+        VERSION_BACK = "1.0.0"
+    }
+
+    stages {
+        stage ('Checkout') {
+            steps {
+                git branch: 'master',
+                    url: 'https://github.com/JSW03280/ExamenMocDBG.git'
+            }
+        }
+
+        stage ('Build') {
+            steps {
+                bat 'mvn clean'
+            }
+        }
+
+        stage ('Test') {
+            steps {
+                bat 'mvn test'
+            }
+        }
+
+        stage ('Package') {
+            steps {
+                bat 'mvn package'
+            }
+        }
+
+        stage ('Mover jar') {
+            steps {
+                bat 'echo "Eliminando directorio versiones..."'
+                bat 'if exist "versiones" rmdir /s /q "versiones"'
+            }
+
+            post {
+                success {
+                    bat 'echo "Se crea el directorio versiones con la última versión de la api"'
+                    bat 'mkdir versiones'
+                    //".\\target\\*.jar" ".\\v%VERSION_BACK%"
+                }
+            }
+        }
+
+        /*
+        stage ('Despliegue') {
+            steps {
+                bat '''
+                    echo "Starting deploy..."
+                    java -jar target/biblioteca-%VERSION_BACK%.jar
+                '''
+            }
+        }
+        */
+    }
+}
