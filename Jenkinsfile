@@ -47,6 +47,7 @@ pipeline {
                     bat 'echo "Se crea el directorio versiones con la última versión de la api"'
                     bat 'mkdir versiones'
                     //".\\target\\*.jar" ".\\v%VERSION_BACK%"
+                    bat 'copy ".\\target\\EamenMocDBG-%VERSION_BACK%.jar" "versiones"'
                 }
             }
         }
